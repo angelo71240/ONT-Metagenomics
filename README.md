@@ -1,22 +1,19 @@
-# ONT-Metagenomics
-Nextflow pipeline for differential abundance and community clustering (Bray-Curtis, PCoA, hierarchical clustering, PCA) on ONT shotgun metagenomic reads, using Kraken2/Bracken taxonomic profiling.
-
-# ONT Shotgun Metagenomics - Step 5 & 6: Differential Abundance and Community Clustering
+# ONT Shotgun Metagenomics — Step 5 & 6: Differential Abundance and Community Clustering
 
 A Nextflow (DSL2) pipeline that takes filtered Oxford Nanopore shotgun metagenomic
 reads through taxonomic profiling (Kraken2 + Bracken), builds a combined abundance
 matrix, and runs two downstream analyses:
 
-- **Step 5 - Differential Abundance**: which taxa differ in relative abundance between samples
-- **Step 6 - Community Clustering**: how similar/dissimilar the samples' microbial communities are (Bray-Curtis, PCoA, hierarchical clustering, PCA, heatmap)
+- **Step 5 — Differential Abundance**: which taxa differ in relative abundance between samples
+- **Step 6 — Community Clustering**: how similar/dissimilar the samples' microbial communities are (Bray-Curtis, PCoA, hierarchical clustering, PCA, heatmap)
 
-This repo covers Steps 5-6 only. Steps 1-4 (assembly, gene prediction, binning,
+This repo covers Steps 5–6 only. Steps 1–4 (assembly, gene prediction, binning,
 read-based taxonomy) are handled in a separate pipeline.
 
 ## ⚠️ About the test dataset
 
 This pipeline was validated on **three ONT shotgun samples pulled from two unrelated
-public studies** - they are **not** a biologically matched comparison group, they exist
+public studies** — they are **not** a biologically matched comparison group, they exist
 purely to test that the Step 5–6 code runs correctly end-to-end on real ONT data before
 being pointed at the actual project dataset.
 
@@ -29,7 +26,7 @@ being pointed at the actual project dataset.
 In other words: 2 of the 3 samples are the *same* environment (fermented soybean) from
 different countries, and the 3rd is a *completely different* environment (forest soil).
 Any "differences" the pipeline reports between these three are expected to be large and
-are a sanity check of the code, not a real biological finding - a genuine differential
+are a sanity check of the code, not a real biological finding — a genuine differential
 abundance / clustering analysis needs samples that share a real experimental question
 (e.g. multiple replicates per condition).
 
@@ -94,18 +91,18 @@ Raw ONT FASTQ (SRR13573807, SRR13573808, ERR15076229)
 │   ├── make_abundance_matrix.py
 │   ├── differential_abundance.py
 │   └── community_clustering.py
-├── data/                          # Input FASTQ (*.fastq.gz) - not tracked in git
-└── results/                       # Pipeline output - not tracked in git
+├── data/                          # Input FASTQ (*.fastq.gz) — not tracked in git
+└── results/                       # Pipeline output — not tracked in git
 ```
 
 ## Requirements
 
 - [Nextflow](https://www.nextflow.io/) ≥ 22.10, DSL2
 - Conda/Miniconda, with the following environments (see [Setup](#setup)):
-  - `nanoplot_env` - NanoPlot
-  - `filtlong_env` - Filtlong
-  - `kraken2_env` - Kraken2, Bracken
-  - `community_env` - pandas, numpy, matplotlib, scipy, scikit-learn
+  - `nanoplot_env` — NanoPlot
+  - `filtlong_env` — Filtlong
+  - `kraken2_env` — Kraken2, Bracken
+  - `community_env` — pandas, numpy, matplotlib, scipy, scikit-learn
 - A Kraken2/Bracken reference database (path set in `params.kraken_db`)
 
 ## Setup
@@ -174,10 +171,20 @@ results/
   classification + abundance re-estimation is the appropriate approach.
 - **Step 6 is called "Community Clustering," not "denoising."** Denoising (e.g.
   DADA2/Deblur) needs many reads piled up at the same genomic position to correct
-  sequencing errors - that only happens with amplicon sequencing (16S), where PCR
+  sequencing errors — that only happens with amplicon sequencing (16S), where PCR
   produces millions of copies of one gene. Shotgun reads come from random genomic
   locations and rarely overlap, so denoising isn't applicable; clustering samples by
   abundance profile (Bray-Curtis / PCoA / hierarchical clustering / PCA) is the shotgun
   equivalent.
 - `fastp`/Trimmomatic were dropped from the QC stage in favor of NanoPlot + Filtlong,
   which are built for ONT long reads rather than Illumina short reads.
+
+## Status
+
+- [x] Steps 1–4 (assembly, gene prediction, binning, read-based taxonomy) — separate pipeline
+- [x] Step 5 & 6 code implemented and wired into `main.nf`
+- [ ] Pipeline run pending on all three test samples — results to be added here
+
+## Results
+
+_To be added after the pipeline finishes running on `SRR13573807`, `SRR13573808`, and `ERR15076229`._
